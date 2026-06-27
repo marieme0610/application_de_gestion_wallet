@@ -15,13 +15,9 @@ function menu():int{
 
 do {
     $choix = menu();
-    if($choix != 1 && $choix != 2 && $choix != 3 && $choix != 4 && $choix != 0 ){
-          echo "Choix invalide !\n";
-    }
-    else{
-            choixFait($choix);
-    }
-      
+    if($choix != 1 && $choix != 2 && $choix != 3 && $choix != 4 && $choix != 0 )
+        echo "Choix invalide !\n";
+    choixFait($choix,$wallets);
 } while ($choix != 0);
 
 ?>

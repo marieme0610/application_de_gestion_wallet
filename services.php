@@ -1,6 +1,6 @@
 <?php
 require "repository.php";
-function creationWallet($nom,$telephone,$code,$solde){
+function creationWallet($nom,$telephone,$code,$solde, array &$wallets){
  $wallet = [
     'client' => "$nom",
     'telephone' => "$telephone",
@@ -8,8 +8,18 @@ function creationWallet($nom,$telephone,$code,$solde){
     'solde' => "$solde"
  ];
 
- ajoutWallet($wallet);
+ ajoutWallet($wallet,$wallets);
 
+}
+
+function faireDepot($telephone,$montant, array &$wallets){
+    foreach ($wallets as $index => $wallet) {
+    if($wallet['telephone']==$telephone){
+        $wallet[$index]['solde']+=$montant;
+        return true;
+      }
+    }
+       return false;
 }
 
 ?>
