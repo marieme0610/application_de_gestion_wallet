@@ -13,6 +13,7 @@ function creationWallet($nom,$telephone,$code,$solde, array &$wallets){
  ];
 
  ajoutWallet($wallet,$wallets);
+ return true;
 
 }
 
@@ -52,7 +53,7 @@ $index = array_search($numeroRetrait, array_column($wallets, 'telephone'));
 if ($index !== false) {
 
     if ($wallets[$index]['solde'] < ($montantRetrait + $frais)) {
-        $wallets[$index]['solde'];
+        // $wallets[$index]['solde'];
         return false;
     }
 
