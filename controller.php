@@ -26,6 +26,7 @@ function choixFait($choix, array $wallets, array $transactions){
             faireRetrait($numeroRetrait,$montantRetrait,$wallets,$transactions);
              break;
         case 4:
+            afficherTransactions($transactions);
              break;
        
 
@@ -50,11 +51,20 @@ function choixFait($choix, array $wallets, array $transactions){
     return $donnee;
 } 
 
+function afficherTransactions(array $transactions)
+{
+    if (empty($transactions)) {
+        echo "Aucune transaction enregistrée.\n";
+        return;
+    }
+
+    foreach ($transactions as $index => $transaction) {
+        echo "========== Transaction " . ($index + 1) . " ==========\n";
+        echo "Numéro   : " . $transaction['numero'] . "\n";
+        echo "Type     : " . $transaction['type'] . "\n";
+        echo "Montant  : " . $transaction['montant'] . " FCFA\n";
+        echo "Frais    : " . $transaction['frais'] . " FCFA\n";
+    }
+}
  
-
-
-
-
-
-
 ?>
