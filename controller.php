@@ -23,6 +23,10 @@ function choixFait($choix, &$wallets, &$transactions)
             break;
 
         case 3:
+             $tel = boucleSaisi("Téléphone: ", "verifNumero");
+            $montant = boucleSaisi("Montant: ", "verifMontant");
+
+            faireRetrait($tel, $montant, $wallets, $transactions);
             break;
 
         case 4:
