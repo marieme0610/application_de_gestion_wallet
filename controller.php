@@ -4,7 +4,7 @@ require "validator.php";
 global $wallets;
 
 
-function choixFait($choix, array $wallets){
+function choixFait($choix, array $wallets, array $transactions){
     switch($choix){
         case 1:
                 $nom = boucleSaisi("Entrer votre nom: \n","nomEstValide");
@@ -18,13 +18,14 @@ function choixFait($choix, array $wallets){
         case 2:
             $numero = boucleSaisi("Entrer votre numero de telephone :\n","verifNumero");
             $montantDepot = boucleSaisi("Entrer le montant a deposé :\n","verifMontant");
-            faireDepot($numero,$montantDepot,$wallets);
+            faireDepot($numero,$montantDepot,$wallets,$transactions);
              break;
         case 3:
-            echo "retrait";
+            $numeroRetrait = boucleSaisi("Entrer votre numero de telephone :\n","verifNumero");
+            $montantRetrait = boucleSaisi("Entrer le montant a retiré :\n","verifMontant");
+            faireRetrait($numeroRetrait,$montantRetrait,$wallets,$transactions);
              break;
         case 4:
-            echo "affiche"; 
              break;
        
 
