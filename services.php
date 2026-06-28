@@ -1,77 +1,81 @@
 <?php
-require "repository.php";
 
+namespace Distributeur\Services;
 
-function creationWallet($nom, $telephone, $code, $solde, &$wallets)
+use function Distributeur\Repository\ajoutWallet;
+use function Distributeur\Repository\ajoutTransaction;
+
+function creationWallet($nom, $telephone, $code, $solde, array &$wallets)
 {
-    $wallets[] = [
-        'client' => $nom,
-        'telephone' => $telephone,
-        'code' => $code,
-        'solde' => $solde
+    $wallet = [
+        'client' => "$nom",
+        'telephone' => "$telephone",
+        'code' => "$code",
+        'solde' => "$solde",
     ];
+
+    ajoutWallet($wallet, $wallets);
 }
 
-function faireDepot($telephone, $montant, &$wallets, &$transactions)
+function faireDepot($telephone, $montant, array &$wallets, array &$transactions)
 {
-    $wallets = array_map(function ($w) use ($telephone, $montant) {
+    $index = array_search($telephone, array_column($wallets, 'telephone'));
 
-        if ($w['telephone'] === $telephone) {
-            $w['solde'] += $montant;
-        }
+    if ($index === false) {
+        return false;
+    }
 
-        return $w;
+    $wallets[$index]['solde'] += $montant;
 
-    }, $wallets);
-
-    $transactions[] = [
-        'numero' => $telephone,
-        'type' => 'depot',
+    $newTrans = [
+        'numero' => "$telephone",
+        'type' => "depot",
         'montant' => $montant,
-        'frais' => 0
+        'frais' => 0,
     ];
+    ajoutTransaction($newTrans, $transactions);
 
     return true;
 }
 
-function calculFrais($montant)
+function frais($montant)
 {
-    if ($montant <= 10000) return 200;
-    if ($montant <= 100000) return 500;
-
-    $frais = $montant * 0.01;
-    return ($frais > 5000) ? 5000 : $frais;
+    if ($montant >= 0 && $montant <= 10000) {
+        return 200;
+    }
+    if ($montant >= 10001 && $montant <= 100000) {
+        return 500;
+    }
+    if ($montant > 100000) {
+        $recup = $montant * 1 / 100;
+        return $recup > 5000 ? 5000 : $recup;
+    }
 }
 
-
-function faireRetrait($numero, $montant, &$wallets, &$transactions)
+function faireRetrait($numeroRetrait, $montantRetrait, array &$wallets, array &$transactions)
 {
-    $frais = calculFrais($montant);
-    $total = $montant + $frais;
+    $index = array_search($numeroRetrait, array_column($wallets, 'telephone'));
 
-    $valide = false;
-
-    $wallets = array_map(function ($w) use ($numero, $total, $montant, $frais, &$valide) {
-
-        if ($w['telephone'] === $numero && $w['solde'] >= $total) {
-            $w['solde'] -= $total;
-            $valide = true;
-        }
-
-        return $w;
-
-    }, $wallets);
-
-    if ($valide) {
-        $transactions[] = [
-            'numero' => $numero,
-            'type' => 'retrait',
-            'montant' => $montant,
-            'frais' => $frais
-        ];
+    if ($index === false) {
+        return false;
     }
 
-    return $valide;
-}
+    $frais = frais($montantRetrait);
 
-?>
+    if ($wallets[$index]['solde'] < $montantRetrait + $frais) {
+        return false;
+    }
+
+    $wallets[$index]['solde'] -= ($montantRetrait + $frais);
+
+    $newTrans = [
+        'numero' => "$numeroRetrait",
+        'type' => "retrait",
+        'montant' => $montantRetrait,
+        'frais' => $frais,
+    ];
+
+    ajoutTransaction($newTrans, $transactions);
+
+    return true;
+}
