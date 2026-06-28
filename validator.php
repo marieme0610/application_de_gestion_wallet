@@ -87,16 +87,22 @@ function soldeEstValide($solde){
     return (verifSolde($solde));
 }
 
-function verifNumero($numero,$wallets){
-    foreach($wallets as $index =>$wallet){
-        if($wallet['telephone'] != $numero) return false;
-        return true;
+function verifNumero($numero, $wallets)
+{
+    foreach ($wallets as $wallet) {
+        if ($numero == $wallet['telephone']) {
+            return true;
+        }
     }
+
+    return false;
 }
 
 function verifMontant($montant){
        return  $montant > 0;   
 }
+
+
 
 
 ?>
