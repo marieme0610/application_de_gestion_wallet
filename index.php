@@ -1,5 +1,16 @@
 <?php
+namespace Distributeur\Index;
+ 
+require "repository.php";
+require "validator.php";
+require "services.php";
 require "controller.php";
+ 
+use function Distributeur\Controller\choixFait;
+use function Distributeur\Repository\getWalletsInitiaux;
+use function Distributeur\Repository\getTransactionsInitiales;
+ 
+
 function menu():int{
             echo "\n===== Menu Distributeur =====\n";
             echo "1. Creer Wallet\n";
@@ -12,6 +23,8 @@ function menu():int{
     return $choix;  
 }
 
+$wallets = getWalletsInitiaux();
+$transactions = getTransactionsInitiales();
 
 do {
     $choix = menu();

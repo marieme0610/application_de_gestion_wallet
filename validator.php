@@ -1,5 +1,6 @@
 <?php
 
+namespace Distributeur\Validator;
 //fonction vrification chiffre
 
 function estUnChiffre($tel){

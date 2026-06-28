@@ -1,5 +1,9 @@
 <?php
-require "repository.php";
+namespace Distributeur\Services;
+ 
+use function Distributeur\Repository\ajoutWallet;
+use function Distributeur\Repository\ajoutTransaction;
+
 function creationWallet($nom,$telephone,$code,$solde, array &$wallets){
  $wallet = [
     'client' => "$nom",
