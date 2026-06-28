@@ -1,0 +1,11 @@
+<?php
+
+$wallets = [
+    ['client'=> "Aba",'telephone'=> "771234567",'code'=> "1234",'solde'=> 10000],
+    ['client'=> "Awa",'telephone'=> "771111111",'code'=> "1111",'solde'=> 800000],
+    ['client'=> "Baba",'telephone'=> "772222222",'code'=> "2222",'solde'=> 1000]
+];
+
+$transactions = [
+    ['numero' => '771111111','type' => 'depot','montant' => 5000,'frais' => 500]
+];
