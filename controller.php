@@ -16,7 +16,10 @@ function choixFait($choix, &$wallets, &$transactions)
             break;
 
         case 2:
-         
+             $tel = boucleSaisi("Téléphone: ", "verifNumero");
+            $montant = boucleSaisi("Montant: ", "verifMontant");
+
+            faireDepot($tel, $montant, $wallets, $transactions);
             break;
 
         case 3:
