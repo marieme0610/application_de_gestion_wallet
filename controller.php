@@ -20,17 +20,35 @@ function choixFait($choix, array &$wallets, array &$transactions){
                 $solde = boucleSaisi("Entrer votre solde: ","Distributeur\\Validator\\soldeEstValide",$wallets);
 
                 creationWallet($nom,$telephone,$code,$solde,$wallets);
+                if(creationWallet($nom,$telephone,$code,$solde,$wallets)){
+                    echo "Creation avec success !\n";
+                } 
+                else{
+                    echo "Echec de creation !\n";
+                }
 
             break;
         case 2:
             $numero = boucleSaisi("Entrer votre numero de telephone :\n","Distributeur\\Validator\\verifNumero",$wallets);
             $montantDepot = boucleSaisi("Entrer le montant a deposé :\n","Distributeur\\Validator\\verifMontant",$wallets);
             faireDepot($numero,$montantDepot,$wallets,$transactions);
+            if(faireDepot($numero,$montantDepot,$wallets,$transactions)){
+                echo "Depot reussit !\n";
+            }
+            else{
+                echo "Echec du depot !\n";
+            }
              break;
         case 3:
             $numeroRetrait = boucleSaisi("Entrer votre numero de telephone :\n","Distributeur\\Validator\\verifNumero",$wallets);
             $montantRetrait = boucleSaisi("Entrer le montant a retiré :\n","Distributeur\\Validator\\verifMontant",$wallets);
             faireRetrait($numeroRetrait,$montantRetrait,$wallets,$transactions);
+            if(faireRetrait($numeroRetrait,$montantRetrait,$wallets,$transactions)){
+                echo "Retrait reussit !\n";
+            }
+             else{
+                echo "Echec du retrait: solde inssufisant !\n";
+            }
              break;
         case 4:
             afficherTransactions($transactions);
