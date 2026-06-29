@@ -1,5 +1,6 @@
 <?php
 
+namespace Distributeur\Validator;
 //fonction vrification chiffre
 
 function estUnChiffre($tel){
@@ -32,25 +33,16 @@ function verifSolde($solde){
 }
 
 //fonction vrification unicité
-
-function verifUnicite($verif, $wallets){
-
+function verifUnicite($verif, $wallets)
+{
     if (strlen($verif) == 9) {
-        foreach ($wallets as $wallet) {
-            if ($verif == $wallet['telephone']) {
-                return false;
-            }
-        }
-        return true;
+        $res = array_filter($wallets, fn($w) => $w['telephone'] === $verif);
+        return empty($res);
     }
 
     if (strlen($verif) == 4) {
-        foreach ($wallets as $wallet) {
-            if ($verif == $wallet['code']) {
-                return false;
-            }
-        }
-        return true;
+        $res = array_filter($wallets, fn($w) => $w['code'] === $verif);
+        return empty($res);
     }
 
     return false;
@@ -89,13 +81,8 @@ function soldeEstValide($solde){
 
 function verifNumero($numero, $wallets)
 {
-    foreach ($wallets as $wallet) {
-        if ($numero == $wallet['telephone']) {
-            return true;
-        }
-    }
-
-    return false;
+    $res = array_filter($wallets, fn($w) => $w['telephone'] === $numero);
+    return !empty($res);
 }
 
 function verifMontant($montant){

@@ -1,5 +1,9 @@
 <?php
-require "repository.php";
+namespace Distributeur\Services;
+ 
+use function Distributeur\Repository\ajoutWallet;
+use function Distributeur\Repository\ajoutTransaction;
+
 function creationWallet($nom,$telephone,$code,$solde, array &$wallets){
  $wallet = [
     'client' => "$nom",
@@ -9,30 +13,67 @@ function creationWallet($nom,$telephone,$code,$solde, array &$wallets){
  ];
 
  ajoutWallet($wallet,$wallets);
+ return true;
 
 }
 
-function faireDepot($telephone,$montant, array &$wallets, array &$transactions){
-    foreach ($wallets as $index => $wallet) {
-    if($wallet['telephone']==$telephone){
-        $wallets[$index]['solde']+=$montant;
+function faireDepot($telephone, $montant, array &$wallets, array &$transactions)
+{
+    $index = array_search($telephone, array_column($wallets, 'telephone'));
 
-         $newTrans = [
+    if ($index !== false) {
+
+        $wallets[$index]['solde'] += $montant;
+
+        $newTrans = [
             'numero' => "$telephone",
             'type' => "depot",
-            'montant'=>$montant,
-            'frais'=> 0,
+            'montant' => $montant,
+            'frais' => 0,
         ];
-        ajoutTransaction($newTrans,$transactions);
-         return true;
-      }
+
+        ajoutTransaction($newTrans, $transactions);
+
+        return true;
     }
-       return false;
+
+    return false;
 }
 
 function faireRetrait($numeroRetrait,$montantRetrait,array &$wallets, array &$transactions) {
 
-var_dump($montantRetrait);
+// var_dump($montantRetrait);
+
+$frais = frais($montantRetrait);
+// var_dump($frais);
+// var_dump($wallets);
+
+$index = array_search($numeroRetrait, array_column($wallets, 'telephone'));
+
+if ($index !== false) {
+
+    if ($wallets[$index]['solde'] < ($montantRetrait + $frais)) {
+        // $wallets[$index]['solde'];
+        return false;
+    }
+
+    $wallets[$index]['solde'] -= ($montantRetrait + $frais);
+
+    $newTrans = [
+        'numero' => "$numeroRetrait",
+        'type' => "retrait",
+        'montant' => $montantRetrait,
+        'frais' => $frais,
+    ];
+
+   ajoutTransaction($newTrans, $transactions);
+
+    return true;
+}
+    return false;
+      
+}
+
 function frais($montant){
     if($montant >= 0 && $montant <=10000){
         return 200;
@@ -49,38 +90,6 @@ function frais($montant){
             return $recup;
         }
     }
-}
-$frais = frais($montantRetrait);
-var_dump($frais);
-var_dump($wallets);
-
-foreach ($wallets as $index => $wallet) {
-    if($wallet['telephone'] == $numeroRetrait){
-     if($wallet['solde'] < $montantRetrait + $frais ){
-        var_dump($wallet['solde']);
-        return false;
-       }
-       else{
-        var_dump($wallets[$index]['solde'] -= ($montantRetrait +$frais));
-         $newTrans = [
-            'numero' => "$numeroRetrait",
-            'type' => "retrait",
-            'montant'=>$montantRetrait,
-            'frais'=> $frais,
-
-        ];
-
-        var_dump($newTrans);
-        var_dump(ajoutTransaction($newTrans,$transactions));
-        return true;
-       }
-    }
-
-   
-    
-    }
-    return false;
-      
 }
 
 
